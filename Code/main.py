@@ -9,6 +9,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
+from typing import List
+
 def read(file: str):
     
     params: np.array(float)
@@ -25,31 +27,17 @@ def read(file: str):
     
     y = np.loadtxt(f'../Data/{file}.Spe', skiprows=12, max_rows=2047)
     
-    if file=='60Co':
-        
-        element: str = r'${60}$Co'
-        
-    elif file=='137Cs':
-        
-        element: str = r'${137}$Cs'
-    
-    else:
-        
-        element: str = file
-    
     plt.figure()
     plt.plot(x, y)
     plt.xlabel(r'$E$ [keV]')
     plt.ylabel('Counts')
     if file=='60Co':
-        plt.title(r'Spectra for ${60}$Co')
+        plt.title(r'Spectra for $^{60}$Co')
     elif file=='137Cs':
-        plt.title(r'Spectra for ${137}$Cs')
+        plt.title(r'Spectra for $^{137}$Cs')
     else:        
         plt.title(f'Spectra for {file}')
     plt.grid(True)
     plt.savefig(f'../Plots/{file}.pdf')
     
     return (x, y)
-
-read('60Co')

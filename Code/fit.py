@@ -7,6 +7,8 @@ Created on Sun Nov 19 15:27:22 2023
 
 import numpy as np
 
+from typing import List
+
 import scipy.optimize as opt
 
 def gaussian(x: np.array(float), mu: float, sigma: float):
@@ -15,12 +17,12 @@ def gaussian(x: np.array(float), mu: float, sigma: float):
 
 def fit(x: np.array(float), y: np.array(float), err_y: np.array(float)):
     
-    params = opt.curve_fit(gaussian, xdata=x, ydata=y, sigma=err_y)
+    params = opt.curve_fit(gaussian, xdata=x, ydata=y, p0=[1000, 100], sigma=err_y)
     
-    mu: float = params[0]
+    mu: float = params[0][0]
     
-    sigma: float = params[1]
+    sigma: float = params[0][1]
     
-    cov: np.array(float, float) = params[2]
+    cov: List[np.array(float)] = params[1]
     
-    return (mu, sigma, cov)
+    return (mu, sigma, cov[0, 0], cov[1, 1])

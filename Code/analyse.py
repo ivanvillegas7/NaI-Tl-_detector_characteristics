@@ -27,11 +27,13 @@ def cobalt(x: np.array(float), y: np.array(float), err_y: np.array(float)):
     
     sigma1: float
     
+    A1: float
+    
     err_mu1: float
     
     err_sigma1: float
     
-    mu1, sigma1, err_mu1, err_sigma1 = fit.fit(x1, y1, err_y1)
+    mu1, sigma1, A1, err_mu1, err_sigma1 = fit.fit(x1, y1, err_y1)
     
     x2: np.array(float) = x[int(round((1260-n)/m)):int(round((1420-n)/m))]
     
@@ -43,13 +45,15 @@ def cobalt(x: np.array(float), y: np.array(float), err_y: np.array(float)):
     
     sigma2: float
     
+    A2: float
+    
     err_mu2: float
     
     err_sigma2: float
     
-    mu2, sigma2, err_mu2, err_sigma2 = fit.fit(x2, y2, err_y2)
+    mu2, sigma2, A2, err_mu2, err_sigma2 = fit.fit(x2, y2, err_y2)
     
-    return (mu1, sigma1, err_mu1, err_sigma1, x1, mu2, sigma2, err_mu2, err_sigma2, x2)
+    return (mu1, sigma1, A1, err_mu1, err_sigma1, x1, mu2, sigma2, A2, err_mu2, err_sigma2, x2)
 
 def cesium(x: np.array(float), y: np.array(float), err_y: np.array(float)):
     
@@ -69,13 +73,15 @@ def cesium(x: np.array(float), y: np.array(float), err_y: np.array(float)):
     
     sigma: float
     
+    A: float
+    
     err_mu: float
     
     err_sigma: float
     
-    mu, sigma, err_mu, err_sigma = fit.fit(x, y, err_y)
+    mu, sigma, A, err_mu, err_sigma = fit.fit(x, y, err_y)
     
-    return(mu, sigma, err_mu, err_sigma, x)
+    return(mu, sigma, A, err_mu, err_sigma, x)
 
 def get_resolution(mu: float, sigma: float, err_mu: float, err_sigma: float):
     
@@ -83,6 +89,6 @@ def get_resolution(mu: float, sigma: float, err_mu: float, err_sigma: float):
     
     errR: float = R*np.sqrt((err_sigma/sigma)**2+(err_mu/mu)**2)
     
-    print(f'\nResolution: ({R}±{errR})%')
+    print(f'\nResolution: ({R: .2f}±{errR: .2f})%\n')
     
     return (R, errR)

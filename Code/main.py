@@ -21,7 +21,7 @@ def main():
     
     files: List[str] = ['background', '60Co', '137Cs', 'callibration']
     
-    err_time: float = 0.01
+    err_time: float = 1
     
     background: np.array(float)
     
@@ -66,6 +66,8 @@ def main():
     
     sigma1: float
     
+    A1: float
+    
     err_mu1: float
     
     err_sigma1: float
@@ -76,13 +78,15 @@ def main():
     
     sigma2: float
     
+    A2: float
+    
     err_mu2: float
     
     err_sigma2: float
     
     x2: np.array(float)
     
-    mu1, sigma1, err_mu1, err_sigma1, x1, mu2, sigma2, err_mu2, err_sigma2, x2 = analyse.cobalt(energyCo, Co, np.sqrt(err_Co2))
+    mu1, sigma1, A1, err_mu1, err_sigma1, x1, mu2, sigma2, A2, err_mu2, err_sigma2, x2 = analyse.cobalt(energyCo, Co, np.sqrt(err_Co2))
     
     print('\nFirst peak of cobalt-60:')
     
@@ -101,20 +105,23 @@ def main():
     R2, errR2 = analyse.get_resolution(mu2, sigma2, err_mu2, err_sigma2)
     
     plt.figure()
-    plt.errorbar(energyCo, Co, yerr=np.sqrt(Co+background))
-    plt.plot(x1, fit.gaussian(x1, mu1, sigma1),\
-             label=f'μ={mu1}±{err_mu1}; σ={sigma1}±{err_sigma2}')
-    plt.plot(x2, fit.gaussian(x2, mu2, sigma2),\
-             label=f'μ={mu2}±{err_mu2}; σ={sigma2}±{err_sigma2}')
+    plt.errorbar(energyCo, Co, yerr=np.sqrt(err_Co2), fmt='.', linestyle='none')
+    plt.plot(x1, fit.gaussian(x1, mu1, sigma1, A1),\
+             label=f'μ={mu1: .2f}±{err_mu1: .2f}; σ={sigma1: .2f}±{err_sigma2: .2f}')
+    plt.plot(x2, fit.gaussian(x2, mu2, sigma2, A2),\
+             label=f'μ={mu2: .2f}±{err_mu2: .2f}; σ={sigma2: .2f}±{err_sigma2: .2f}')
     plt.xlabel(r'$E$ [keV]')
     plt.ylabel(r'Counts per second [s$^{-1}$]')
     plt.title(r'Spectra for $^{60}$Co')
     plt.grid(True)
+    plt.legend()
     plt.savefig('../Plots/60Co-background.pdf')
     
     mu: float
     
     sigma: float
+    
+    A: float
     
     err_mu: float
     
@@ -122,7 +129,7 @@ def main():
     
     x: np.array(float)
     
-    mu, sigma, err_mu, err_sigma, x = analyse.cesium(energyCs, Cs, np.sqrt(err_Cs2))    
+    mu, sigma, A, err_mu, err_sigma, x = analyse.cesium(energyCs, Cs, np.sqrt(err_Cs2))    
     
     print('\nPeak of cesium-137:')
     
@@ -133,13 +140,14 @@ def main():
     R, errR = analyse.get_resolution(mu, sigma, err_mu, err_sigma)
     
     plt.figure()
-    plt.errorbar(energyCs, Cs, yerr=np.sqrt(Cs+background))
-    plt.plot(x, fit.gaussian(x, mu, sigma),\
-             label=f'μ={mu}±{err_mu}; σ={sigma}±{err_sigma}')
+    plt.errorbar(energyCs, Cs, yerr=np.sqrt(err_Cs2), fmt='.', linestyle='none')
+    plt.plot(x, fit.gaussian(x, mu, sigma, A),\
+             label=f'μ={mu: .2f}±{err_mu: .2f}; σ={sigma: .2f}±{err_sigma: .2f}')
     plt.xlabel(r'$E$ [keV]')
     plt.ylabel(r'Counts per second [s$^{-1}$]')
     plt.title(r'Spectra for $^{137}$Cs')
     plt.grid(True)
+    plt.legend()
     plt.savefig('../Plots/137Cs-background.pdf')
     
     print('\nMean value:')
@@ -148,6 +156,6 @@ def main():
     
     errR_mean: float = np.sqrt(errR1**2+errR2**2+errR**2)/3
     
-    print(f'\nResolution mean value: R=({R_mean}±{errR_mean})%')
+    print(f'\nResolution mean value: R=({R_mean: .2f}±{errR_mean: .2f})%')
     
 main()

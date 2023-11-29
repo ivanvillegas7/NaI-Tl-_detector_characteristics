@@ -139,10 +139,24 @@ def main():
     
     R, errR = analyse.get_resolution(mu, sigma, err_mu, err_sigma)
     
+    mu_back: float
+    
+    sigma_back: float
+    
+    err_mu_back: float
+    
+    err_sigma_back: float
+    
+    x_back: np.array(float)
+    
+    mu_back, sigma_back, A_back, err_mu_back, err_sigma_back, x_back = analyse.cesium_back(energyCs, Cs, np.sqrt(err_Cs2))    
+    
     plt.figure()
     plt.errorbar(energyCs, Cs, yerr=np.sqrt(err_Cs2), fmt='.', linestyle='none')
     plt.plot(x, fit.gaussian(x, mu, sigma, A),\
              label=f'μ={mu: .2f}±{err_mu: .2f}; σ={sigma: .2f}±{err_sigma: .2f}')
+    plt.plot(x_back, fit.gaussian(x_back, mu_back, sigma_back, A_back),\
+             label=f'μ={mu_back: .1f}±{err_mu_back: .1f}; σ={sigma_back: .0f}±{err_sigma_back: .0f}')
     plt.xlabel(r'$E$ [keV]')
     plt.ylabel(r'Counts per second [s$^{-1}$]')
     plt.title(r'Spectra for $^{137}$Cs')
@@ -150,12 +164,12 @@ def main():
     plt.legend()
     plt.savefig('../Plots/137Cs-background.pdf')
     
-    print('\nMean value:')
+    m_e: float
     
-    R_mean: float = (R1+R2+R)/3
+    m_e_err: float
     
-    errR_mean: float = np.sqrt(errR1**2+errR2**2+errR**2)/3
+    m_e, m_e_err = analyse.get_electron_mass(mu, err_mu, mu_back, err_mu_back)
     
-    print(f'\nResolution mean value: R=({R_mean: .2f}±{errR_mean: .2f})%')
+    print(f'Mass of the electron: ({m_e: .3f}±{m_e_err: .3f})keV.')
     
 main()

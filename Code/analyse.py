@@ -92,3 +92,43 @@ def get_resolution(mu: float, sigma: float, err_mu: float, err_sigma: float):
     print(f'\nResolution: ({R: .2f}±{errR: .2f})%\n')
     
     return (R, errR)
+
+def cesium_back(x: np.array(float), y: np.array(float), err_y: np.array(float)):
+    
+    params = np.loadtxt('../Data/137Cs.Spe', skiprows=2067, max_rows=1)
+    
+    n: float = params[0]
+    
+    m: float = params[1]
+    
+    x: np.array(float) = x[int(round((150-n)/m)):int(round((200-n)/m))]
+    
+    y: np.array(float) = y[int(round((150-n)/m)):int(round((200-n)/m))]
+    
+    err_y: np.array(float) = err_y[int(round((150-n)/m)):int(round((200-n)/m))]
+    
+    mu: float
+    
+    sigma: float
+    
+    A: float
+    
+    err_mu: float
+    
+    err_sigma: float
+    
+    mu, sigma, A, err_mu, err_sigma = fit.fit2(x, y, err_y)
+    
+    return(mu, sigma, A, err_mu, err_sigma, x)
+
+def get_electron_mass(E: float, err_E: float, E_back: float, err_E_back):
+    
+    m_e: float = 2*E*E_back/(E-E_back)
+    
+    t1: float = (-2*E_back)/(E-E_back)**2
+    
+    t2: float = (2*E)/(E-E_back)**2
+    
+    err_m_e: float = np.sqrt(t1**2*err_E**2+t2**2*err_E_back**2)
+    
+    return(m_e, err_m_e)

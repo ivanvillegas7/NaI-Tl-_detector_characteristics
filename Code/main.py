@@ -170,6 +170,6 @@ def main():
     
     m_e, m_e_err = analyse.get_electron_mass(mu, err_mu, mu_back, err_mu_back)
     
-    print(f'Mass of the electron: ({m_e: .3f}±{m_e_err: .3f})keV.')
+    print(f'Mass of the electron: ({m_e: .0f}±{m_e_err: .0f})keV.')
     
 main()

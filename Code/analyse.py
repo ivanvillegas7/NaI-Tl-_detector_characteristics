@@ -125,10 +125,6 @@ def get_electron_mass(E: float, err_E: float, E_back: float, err_E_back):
     
     m_e: float = 2*E*E_back/(E-E_back)
     
-    t1: float = (-2*E_back)/(E-E_back)**2
-    
-    t2: float = (2*E)/(E-E_back)**2
-    
-    err_m_e: float = np.sqrt(t1**2*err_E**2+t2**2*err_E_back**2)
+    err_m_e: float = err_E_back*(2*E**2)/((E_back-mu)**2) + err_E*(2*E_back**2)/((E_back - E)**2)
     
     return(m_e, err_m_e)
